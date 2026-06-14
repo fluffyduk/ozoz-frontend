@@ -1,0 +1,52 @@
+{
+  "hash": "cebf9288",
+  "configHash": "9c21f721",
+  "lockfileHash": "9a810cba",
+  "browserHash": "8b6e3067",
+  "optimized": {
+    "primereact/api": {
+      "src": "../../node_modules/primereact/api/api.esm.js",
+      "file": "primereact_api.js",
+      "fileHash": "30837ae2",
+      "needsInterop": false
+    },
+    "primereact/button": {
+      "src": "../../node_modules/primereact/button/button.esm.js",
+      "file": "primereact_button.js",
+      "fileHash": "ec0b7620",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "7feee81d",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b70f089e",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "8eb0dc87",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "api.esm-n1XAMt_i": {
+      "file": "api.esm-n1XAMt_i.js",
+      "isDynamicEntry": false
+    },
+    "react-Ea1HnpA1": {
+      "file": "react-Ea1HnpA1.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-BiNnG8uc": {
+      "file": "react-dom-BiNnG8uc.js",
+      "isDynamicEntry": false
+    }
+  }
+}
