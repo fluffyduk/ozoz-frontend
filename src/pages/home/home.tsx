@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { useState } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Dropdown } from 'primereact/dropdown';
 
 type Product = {
     id: number;
@@ -39,6 +40,17 @@ const categoryLabels: Record<ProductCategory, string> = {
     SPORTS_AND_OUTDOORS: 'Спорт и отдых',
     GROCERIES: 'Продукты',
 };
+
+const categoryOptions = [
+    {
+        label: 'Все категории',
+        value: '',
+    },
+    ...productCategories.map((categoryName) => ({
+        label: categoryLabels[categoryName],
+        value: categoryName,
+    })),
+];
 
 const apiBaseUrl = import.meta.env.VITE_DOMAIN;
 
@@ -178,17 +190,14 @@ export const HomePage = () => {
             <div className={styles.filters}>
                 <label className={styles.filter}>
                     <span>Категория</span>
-                    <select
+                    <Dropdown
                         value={category}
-                        onChange={(event) => handleCategoryChange(event.target.value as CategoryFilter)}
-                    >
-                        <option value="">Все категории</option>
-                        {productCategories.map((categoryName) => (
-                            <option key={categoryName} value={categoryName}>
-                                {categoryLabels[categoryName]}
-                            </option>
-                        ))}
-                    </select>
+                        options={categoryOptions}
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Все категории"
+                        onChange={(event) => handleCategoryChange(event.value as CategoryFilter)}
+                    />
                 </label>
 
                 <label className={styles.filter}>

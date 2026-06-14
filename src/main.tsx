@@ -2,12 +2,15 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { PrimeReactProvider } from 'primereact/api';
-import { HomePage } from './pages/home/home.tsx';
+import { BrowserRouter } from 'react-router-dom';
+import { App } from './App';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <PrimeReactProvider>
-            <HomePage />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </PrimeReactProvider>
     </StrictMode>,
 )

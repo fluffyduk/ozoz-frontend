@@ -1,17 +1,15 @@
-import { Button } from 'primereact/button';
+import { Route, Routes } from "react-router";
+import { HomePage } from "./pages/home/home";
+import { MainLayout } from "./layouts/main/layout";
 
-import 'primereact/resources/themes/lara-light-indigo/theme.css'; //theme
-import 'primereact/resources/primereact.min.css'; //core css
-import 'primeicons/primeicons.css';
-
-function App() {
-  return (
-    <>
-      <Button>
-        Говно
-      </Button>
-    </>
-  )
+export const App = () => {
+    return (
+        <Routes>
+            <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/basket" element={<HomePage />} />
+                <Route path="/my-orders" element={<HomePage />} />
+            </Route>
+        </Routes>
+    );
 }
-
-export default App

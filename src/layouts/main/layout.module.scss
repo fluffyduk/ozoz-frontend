@@ -1,0 +1,59 @@
+.layout {
+    min-height: 100vh;
+    background: #f6f7fb;
+}
+
+.header {
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: white;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(100%, 960px);
+    padding: 12px 0;
+    box-sizing: border-box;
+}
+
+.logo {
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    button span {
+        color: #334155;
+        font-weight: 700;
+        text-align: center;
+    }
+}
+
+@media (max-width: 520px) {
+    .navigation {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px 16px;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions :global(.p-button) {
+        flex: 1;
+    }
+}
