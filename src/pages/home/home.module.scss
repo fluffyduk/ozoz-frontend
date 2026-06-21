@@ -94,7 +94,6 @@
         padding: 16px;
 
         h3 {
-            min-height: 48px;
             margin: 0;
             color: #111827;
             font-size: 17px;
@@ -105,6 +104,13 @@
             margin: 0;
             color: #64748b;
             font-size: 14px;
+            line-height: 1.4;
+        }
+
+        > span {
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
         }
     }
 
@@ -135,6 +141,13 @@
     .error {
         margin: 12px 0;
         color: #dc2626;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .success {
+        margin: 12px 0;
+        color: #16a34a;
         font-weight: 600;
         text-align: center;
     }

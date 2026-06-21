@@ -4,16 +4,22 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css'; //theme
 import 'primereact/resources/primereact.min.css'; //core css
 import 'primeicons/primeicons.css';
 import { InputText } from 'primereact/inputtext';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 
+import { addProductToCart } from '../../shared/lib/cart';
+
 type Product = {
-    id: number;
-    title: string;
+    id: string;
+    name: string;
+    description: string;
+    weight: number;
     category: string;
     price: number;
+    createdAt: string;
+    updatedAt: string;
 };
 
 const productCategories = [
@@ -53,6 +59,7 @@ const categoryOptions = [
 ];
 
 const apiBaseUrl = import.meta.env.VITE_DOMAIN;
+const productsPageSize = 21;
 
 const isProductCategory = (value: string): value is ProductCategory => (
     productCategories.some((categoryName) => categoryName === value)
@@ -66,6 +73,13 @@ const getCategoryLabel = (category: string) => {
     return category;
 };
 
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
+};
+
 export const HomePage = () => {
     const [search, setSearch] = useState<string>('');
     const [category, setCategory] = useState<CategoryFilter>('');
@@ -76,6 +90,7 @@ export const HomePage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [hasSearched, setHasSearched] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
+    const [cartMessage, setCartMessage] = useState<string>('');
 
     const handleFilterChange = (filterSetter: (value: string) => void, value: string) => {
         filterSetter(value);
@@ -87,7 +102,7 @@ export const HomePage = () => {
         setPage(1);
     };
 
-    const getProductsUrl = (pageNumber: number) => {
+    const getProductsUrl = useCallback((pageNumber: number) => {
         if (!apiBaseUrl) {
             throw new Error('Не задан VITE_DOMAIN в .env');
         }
@@ -96,6 +111,7 @@ export const HomePage = () => {
 
         url.searchParams.set('SearchTerm', search);
         url.searchParams.set('PageNumber', String(pageNumber));
+        url.searchParams.set('PageSize', String(productsPageSize));
 
         if (minPrice !== '') {
             url.searchParams.set('MinPrice', minPrice);
@@ -110,9 +126,9 @@ export const HomePage = () => {
         }
 
         return url;
-    };
+    }, [category, maxPrice, minPrice, search]);
 
-    const loadProducts = async (pageNumber: number) => {
+    const loadProducts = useCallback(async (pageNumber: number) => {
         setIsLoading(true);
         setError('');
 
@@ -141,7 +157,7 @@ export const HomePage = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [getProductsUrl]);
 
     const handleSearch = async () => {
         const loadedProducts = await loadProducts(1);
@@ -170,6 +186,7 @@ export const HomePage = () => {
         setProducts(loadedProducts);
         setPage(previousPage);
         setHasSearched(true);
+        scrollToTop();
     };
 
     const handleNextPage = async () => {
@@ -183,7 +200,32 @@ export const HomePage = () => {
         setProducts(loadedProducts);
         setPage(nextPage);
         setHasSearched(true);
+        scrollToTop();
     };
+
+    const handleAddToCart = (product: Product) => {
+        addProductToCart({
+            ...product,
+            category: getCategoryLabel(product.category),
+        });
+        setCartMessage(`Товар «${product.name}» добавлен в корзину`);
+    };
+
+    useEffect(() => {
+        const timeoutId = window.setTimeout(async () => {
+            const loadedProducts = await loadProducts(1);
+
+            if (loadedProducts === null) {
+                return;
+            }
+
+            setProducts(loadedProducts);
+            setPage(1);
+            setHasSearched(true);
+        }, 0);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [loadProducts]);
 
     return (
         <section className={styles['page-wrapper']}>
@@ -245,9 +287,18 @@ export const HomePage = () => {
                                 <span>{getCategoryLabel(product.category)}</span>
                             </div>
                             <div className={styles['product-content']}>
-                                <h3>{product.title}</h3>
+                                <h3>{product.name}</h3>
+                                <p>{product.description}</p>
+                                <span>{product.weight.toLocaleString('ru-RU')} кг</span>
                                 <div className={styles['product-footer']}>
-                                    <strong>{product.price.toLocaleString('ru-RU')} ₽</strong>
+                                    <strong>{product.price.toLocaleString('ru-RU', {
+                                        maximumFractionDigits: 2,
+                                    })} ₽</strong>
+                                    <Button
+                                        label="В корзину"
+                                        outlined
+                                        onClick={() => handleAddToCart(product)}
+                                    />
                                 </div>
                             </div>
                         </Card>
@@ -260,6 +311,10 @@ export const HomePage = () => {
 
                 {error !== '' && (
                     <p className={styles.error}>{error}</p>
+                )}
+
+                {cartMessage !== '' && (
+                    <p className={styles.success}>{cartMessage}</p>
                 )}
 
                 {hasSearched && products.length === 0 && !isLoading && error === '' && (

@@ -1,0 +1,153 @@
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px 0;
+    background: #f6f7fb;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: min(100%, 960px);
+    margin-bottom: 16px;
+
+    h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 28px;
+        line-height: 1.2;
+    }
+
+    strong {
+        color: #0f172a;
+        font-size: 24px;
+    }
+}
+
+.items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: min(100%, 960px);
+}
+
+.card {
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
+
+    :global(.p-card-body) {
+        padding: 0;
+    }
+
+    :global(.p-card-content) {
+        padding: 0;
+    }
+}
+
+.item-info {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+
+    h2 {
+        margin: 0;
+        color: #111827;
+        font-size: 18px;
+        line-height: 1.35;
+    }
+
+    p {
+        margin: 6px 0 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    strong {
+        color: #0f172a;
+        font-size: 20px;
+        white-space: nowrap;
+    }
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    :global(.p-button) {
+        width: 42px;
+        min-width: 42px;
+    }
+
+    :global(.p-inputtext) {
+        width: 80px;
+        min-height: 42px;
+        text-align: center;
+    }
+}
+
+.checkout {
+    display: flex;
+    justify-content: flex-end;
+    width: min(100%, 960px);
+    margin-top: 20px;
+}
+
+.message,
+.success,
+.error {
+    width: min(100%, 960px);
+    margin: 12px 0;
+    text-align: center;
+}
+
+.message {
+    color: #64748b;
+}
+
+.success {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.error {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+@media (max-width: 760px) {
+    .page-wrapper {
+        padding: 24px 16px;
+    }
+
+    .header,
+    .item-info,
+    .item-controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .checkout {
+        justify-content: stretch;
+
+        :global(.p-button) {
+            width: 100%;
+        }
+    }
+}
