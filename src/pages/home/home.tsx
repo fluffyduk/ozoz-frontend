@@ -22,6 +22,14 @@ type Product = {
     updatedAt: string;
 };
 
+type ProductFilters = {
+    search: string;
+    category: CategoryFilter;
+    minPrice: string;
+    maxPrice: string;
+    sortBy: ProductSortBy;
+};
+
 const productCategories = [
     'ELECTRONICS',
     'HOME_APPLIANCES',
@@ -35,6 +43,15 @@ const productCategories = [
 
 type ProductCategory = (typeof productCategories)[number];
 type CategoryFilter = ProductCategory | '';
+
+const productSortValues = [
+    'Relevance',
+    'PriceAsc',
+    'PriceDesc',
+    'Newest',
+] as const;
+
+type ProductSortBy = (typeof productSortValues)[number];
 
 const categoryLabels: Record<ProductCategory, string> = {
     ELECTRONICS: 'Электроника',
@@ -58,8 +75,21 @@ const categoryOptions = [
     })),
 ];
 
+const sortLabels: Record<ProductSortBy, string> = {
+    Relevance: 'По релевантности',
+    PriceAsc: 'Сначала дешевле',
+    PriceDesc: 'Сначала дороже',
+    Newest: 'Сначала новые',
+};
+
+const sortOptions = productSortValues.map((sortValue) => ({
+    label: sortLabels[sortValue],
+    value: sortValue,
+}));
+
 const apiBaseUrl = import.meta.env.VITE_DOMAIN;
 const productsPageSize = 21;
+const searchDelay = 500;
 
 const isProductCategory = (value: string): value is ProductCategory => (
     productCategories.some((categoryName) => categoryName === value)
@@ -80,11 +110,27 @@ const scrollToTop = () => {
     });
 };
 
+const areProductFiltersEqual = (firstFilters: ProductFilters, secondFilters: ProductFilters) => (
+    firstFilters.search === secondFilters.search
+    && firstFilters.category === secondFilters.category
+    && firstFilters.minPrice === secondFilters.minPrice
+    && firstFilters.maxPrice === secondFilters.maxPrice
+    && firstFilters.sortBy === secondFilters.sortBy
+);
+
 export const HomePage = () => {
     const [search, setSearch] = useState<string>('');
     const [category, setCategory] = useState<CategoryFilter>('');
     const [minPrice, setMinPrice] = useState<string>('');
     const [maxPrice, setMaxPrice] = useState<string>('');
+    const [sortBy, setSortBy] = useState<ProductSortBy>('Relevance');
+    const [debouncedFilters, setDebouncedFilters] = useState<ProductFilters>({
+        search: '',
+        category: '',
+        minPrice: '',
+        maxPrice: '',
+        sortBy: 'Relevance',
+    });
     const [page, setPage] = useState<number>(1);
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -99,41 +145,58 @@ export const HomePage = () => {
 
     const handleCategoryChange = (value: CategoryFilter) => {
         setCategory(value);
+        setDebouncedFilters((currentFilters) => ({
+            ...currentFilters,
+            category: value,
+        }));
         setPage(1);
     };
 
-    const getProductsUrl = useCallback((pageNumber: number) => {
+    const handleSortChange = (value: ProductSortBy) => {
+        setSortBy(value);
+        setDebouncedFilters((currentFilters) => ({
+            ...currentFilters,
+            sortBy: value,
+        }));
+        setPage(1);
+    };
+
+    const getProductsUrl = useCallback((pageNumber: number, filters: ProductFilters) => {
         if (!apiBaseUrl) {
             throw new Error('Не задан VITE_DOMAIN в .env');
         }
 
         const url = new URL('/api/v1/products', apiBaseUrl);
 
-        url.searchParams.set('SearchTerm', search);
+        url.searchParams.set('SearchTerm', filters.search);
         url.searchParams.set('PageNumber', String(pageNumber));
         url.searchParams.set('PageSize', String(productsPageSize));
+        url.searchParams.set('SortBy', filters.sortBy);
 
-        if (minPrice !== '') {
-            url.searchParams.set('MinPrice', minPrice);
+        if (filters.minPrice !== '') {
+            url.searchParams.set('MinPrice', filters.minPrice);
         }
 
-        if (maxPrice !== '') {
-            url.searchParams.set('MaxPrice', maxPrice);
+        if (filters.maxPrice !== '') {
+            url.searchParams.set('MaxPrice', filters.maxPrice);
         }
 
-        if (category !== '') {
-            url.searchParams.set('Category', category);
+        if (filters.category !== '') {
+            url.searchParams.set('Category', filters.category);
         }
 
         return url;
-    }, [category, maxPrice, minPrice, search]);
+    }, []);
 
-    const loadProducts = useCallback(async (pageNumber: number) => {
+    const loadProducts = useCallback(async (
+        pageNumber: number,
+        filters = debouncedFilters,
+    ) => {
         setIsLoading(true);
         setError('');
 
         try {
-            const response = await fetch(getProductsUrl(pageNumber));
+            const response = await fetch(getProductsUrl(pageNumber, filters));
 
             if (!response.ok) {
                 throw new Error('Не удалось загрузить товары');
@@ -157,18 +220,17 @@ export const HomePage = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [getProductsUrl]);
+    }, [debouncedFilters, getProductsUrl]);
 
-    const handleSearch = async () => {
-        const loadedProducts = await loadProducts(1);
-
-        if (loadedProducts === null) {
-            return;
-        }
-
-        setProducts(loadedProducts);
+    const handleSearch = () => {
+        setDebouncedFilters({
+            search,
+            category,
+            minPrice,
+            maxPrice,
+            sortBy,
+        });
         setPage(1);
-        setHasSearched(true);
     };
 
     const handlePreviousPage = async () => {
@@ -213,7 +275,7 @@ export const HomePage = () => {
 
     useEffect(() => {
         const timeoutId = window.setTimeout(async () => {
-            const loadedProducts = await loadProducts(1);
+            const loadedProducts = await loadProducts(1, debouncedFilters);
 
             if (loadedProducts === null) {
                 return;
@@ -225,7 +287,28 @@ export const HomePage = () => {
         }, 0);
 
         return () => window.clearTimeout(timeoutId);
-    }, [loadProducts]);
+    }, [debouncedFilters, loadProducts]);
+
+    useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            setDebouncedFilters((currentFilters) => {
+                const nextFilters = {
+                    ...currentFilters,
+                    search,
+                    minPrice,
+                    maxPrice,
+                };
+
+                if (areProductFiltersEqual(currentFilters, nextFilters)) {
+                    return currentFilters;
+                }
+
+                return nextFilters;
+            });
+        }, searchDelay);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [maxPrice, minPrice, search]);
 
     return (
         <section className={styles['page-wrapper']}>
@@ -261,6 +344,17 @@ export const HomePage = () => {
                         value={maxPrice}
                         placeholder="до"
                         onChange={(event) => handleFilterChange(setMaxPrice, event.target.value)}
+                    />
+                </label>
+
+                <label className={styles.filter}>
+                    <span>Сортировка</span>
+                    <Dropdown
+                        value={sortBy}
+                        options={sortOptions}
+                        optionLabel="label"
+                        optionValue="value"
+                        onChange={(event) => handleSortChange(event.value as ProductSortBy)}
                     />
                 </label>
             </div>
