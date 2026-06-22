@@ -40,6 +40,29 @@
     }
 }
 
+.generate {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 8px;
+    width: min(100%, 960px);
+    margin-bottom: 16px;
+}
+
+.generate-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+
+    :global(.p-inputtext) {
+        width: 140px;
+        min-height: 42px;
+    }
+}
+
 .products {
     display: flex;
     flex-direction: column;
@@ -173,9 +196,18 @@
     }
 
     .search,
+    .generate,
     .card-header,
     .actions {
         flex-direction: column;
+    }
+
+    .generate {
+        align-items: stretch;
+    }
+
+    .generate-field :global(.p-inputtext) {
+        width: 100%;
     }
 
     .form {

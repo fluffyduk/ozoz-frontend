@@ -1,5 +1,6 @@
 import styles from './admin.module.scss';
 import { useAdminProducts } from './model/useAdminProducts';
+import { AdminGenerateProducts } from './ui/AdminGenerateProducts';
 import { AdminHeader } from './ui/AdminHeader';
 import { AdminPagination } from './ui/AdminPagination';
 import { AdminProductsList } from './ui/AdminProductsList';
@@ -12,12 +13,16 @@ export const AdminPage = () => {
         page,
         products,
         draftsByProductId,
+        generateCount,
         isLoading,
+        isGenerating,
         pendingProductId,
         error,
         successMessage,
         handleSearchChange,
         handleSearchSubmit,
+        handleGenerateCountChange,
+        handleGenerateProducts,
         handleDraftChange,
         handleSaveProduct,
         handleDeleteProduct,
@@ -34,6 +39,13 @@ export const AdminPage = () => {
                 isLoading={isLoading}
                 onSearchChange={handleSearchChange}
                 onSearchSubmit={handleSearchSubmit}
+            />
+
+            <AdminGenerateProducts
+                count={generateCount}
+                isDisabled={isLoading || isGenerating}
+                onCountChange={handleGenerateCountChange}
+                onGenerate={handleGenerateProducts}
             />
 
             <AdminStatus

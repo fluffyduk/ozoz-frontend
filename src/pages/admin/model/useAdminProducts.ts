@@ -6,6 +6,7 @@ import type { ProductDraft } from './types';
 import { getProductDraft, getProductUpdatePayload } from './types';
 
 const productsPageSize = 20;
+const defaultGenerateCount = '1';
 
 const getProductsUrl = (pageNumber: number, search: string) => {
     if (!appConfig.productsApiUrl) {
@@ -28,6 +29,18 @@ const getProductUrl = (productId: string) => {
     }
 
     return new URL(`/api/v1/products/${productId}`, appConfig.productsApiUrl);
+};
+
+const getGenerateFakeProductsUrl = (count: string) => {
+    if (!appConfig.productsApiUrl) {
+        throw new Error('Не задан VITE_DOMAIN в .env');
+    }
+
+    const url = new URL('/api/v1/dev-tools/generate-fake-products', appConfig.productsApiUrl);
+
+    url.searchParams.set('count', count);
+
+    return url;
 };
 
 const isProduct = (value: unknown): value is Product => {
@@ -55,7 +68,9 @@ export const useAdminProducts = () => {
     const [page, setPage] = useState<number>(1);
     const [products, setProducts] = useState<Product[]>([]);
     const [draftsByProductId, setDraftsByProductId] = useState<Record<string, ProductDraft>>({});
+    const [generateCount, setGenerateCount] = useState<string>(defaultGenerateCount);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
     const [pendingProductId, setPendingProductId] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
@@ -124,6 +139,41 @@ export const useAdminProducts = () => {
         }
 
         setAppliedSearch(search);
+    };
+
+    const handleGenerateCountChange = (value: string) => {
+        setGenerateCount(value);
+        setSuccessMessage('');
+    };
+
+    const handleGenerateProducts = async () => {
+        const normalizedCount = Math.max(1, Number(generateCount) || 1);
+
+        setIsGenerating(true);
+        setError('');
+        setSuccessMessage('');
+
+        try {
+            const response = await fetch(getGenerateFakeProductsUrl(String(normalizedCount)), {
+                method: 'POST',
+            });
+
+            if (!response.ok) {
+                throw new Error('Не удалось создать товары');
+            }
+
+            setGenerateCount(String(normalizedCount));
+            setSuccessMessage(`Создано товаров: ${normalizedCount}`);
+            await loadProducts(page, appliedSearch);
+        } catch (requestError) {
+            const message = requestError instanceof Error
+                ? requestError.message
+                : 'Не удалось создать товары';
+
+            setError(message);
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     const handleDraftChange = (productId: string, field: keyof ProductDraft, value: string) => {
@@ -265,12 +315,16 @@ export const useAdminProducts = () => {
         page,
         products,
         draftsByProductId,
+        generateCount,
         isLoading,
+        isGenerating,
         pendingProductId,
         error,
         successMessage,
         handleSearchChange: setSearch,
         handleSearchSubmit,
+        handleGenerateCountChange,
+        handleGenerateProducts,
         handleDraftChange,
         handleSaveProduct,
         handleDeleteProduct,
