@@ -3,34 +3,12 @@ import { useParams } from 'react-router';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 
+import type { Product } from '../../entities/product';
+import { getProductCategoryLabel } from '../../entities/product';
 import { addProductToCart } from '../../shared/lib/cart';
 import styles from './product.module.scss';
 
-type Product = {
-    id: string;
-    name: string;
-    description: string;
-    weight: number;
-    category: string;
-    price: number;
-    createdAt: string;
-    updatedAt: string;
-};
-
-const categoryLabels: Record<string, string> = {
-    ELECTRONICS: 'Электроника',
-    HOME_APPLIANCES: 'Бытовая техника',
-    CLOTHING_AND_SHOES: 'Одежда и обувь',
-    HEALTH_AND_BEAUTY: 'Здоровье и красота',
-    JEWELRY_AND_WATCHES: 'Украшения и часы',
-    CHILDREN_GOODS: 'Детские товары',
-    SPORTS_AND_OUTDOORS: 'Спорт и отдых',
-    GROCERIES: 'Продукты',
-};
-
 const apiBaseUrl = import.meta.env.VITE_DOMAIN;
-
-const getCategoryLabel = (category: string) => categoryLabels[category] ?? category;
 
 export const ProductPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -83,7 +61,7 @@ export const ProductPage = () => {
 
         addProductToCart({
             ...product,
-            category: getCategoryLabel(product.category),
+            category: getProductCategoryLabel(product.category),
         });
         setCartMessage(`Товар «${product.name}» добавлен в корзину`);
     };
@@ -113,7 +91,7 @@ export const ProductPage = () => {
             {product && (
                 <Card className={styles.card}>
                     <div className={styles.preview}>
-                        <span>{getCategoryLabel(product.category)}</span>
+                        <span>{getProductCategoryLabel(product.category)}</span>
                     </div>
 
                     <div className={styles.content}>

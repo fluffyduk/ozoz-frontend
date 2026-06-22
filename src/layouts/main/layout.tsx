@@ -19,6 +19,11 @@ export const MainLayout = () => {
 
                     <div className={styles.actions}>
                         <Button
+                            label="Админка"
+                            outlined
+                            onClick={() => navigate('/admin')}
+                        />
+                        <Button
                             label="Корзина"
                             outlined
                             onClick={() => navigate('/basket')}

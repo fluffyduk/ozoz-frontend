@@ -6,6 +6,7 @@ import { MyOrdersPage } from "./pages/my_orders/my_orders";
 import { useEffect } from "react";
 import { getUserId } from "./shared/lib/user_id";
 import { ProductPage } from "./pages/product/product";
+import { AdminPage } from "./pages/admin/admin";
 
 export const App = () => {
     useEffect(() => {
@@ -19,6 +20,7 @@ export const App = () => {
                 <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="/basket" element={<BasketPage />} />
                 <Route path="/my-orders" element={<MyOrdersPage />} />
+                <Route path="/admin" element={<AdminPage />} />
             </Route>
         </Routes>
     );
