@@ -14,7 +14,6 @@ export const MyOrdersPage = () => {
         loadingOrderId,
         error,
         loadOrderDetails,
-        updateOrderStatus,
         handlePreviousPage,
         handleNextPage,
     } = useOrders();
@@ -34,7 +33,6 @@ export const MyOrdersPage = () => {
                 detailsByOrderId={detailsByOrderId}
                 loadingOrderId={loadingOrderId}
                 onLoadDetails={loadOrderDetails}
-                onUpdateStatus={updateOrderStatus}
             />
 
             <OrdersPagination

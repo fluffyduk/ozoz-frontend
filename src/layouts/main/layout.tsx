@@ -14,7 +14,7 @@ export const MainLayout = () => {
             <header className={styles.header}>
                 <nav className={styles.navigation}>
                     <Link className={styles.logo} to="/">
-                        Ozoz
+                        OZOZ
                     </Link>
 
                     <div className={styles.actions}>

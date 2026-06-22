@@ -7,7 +7,6 @@ type Props = {
     detailsByOrderId: Record<string, OrderDetails>;
     loadingOrderId: string;
     onLoadDetails: (orderId: string) => void;
-    onUpdateStatus: (orderId: string) => void;
 };
 
 export const OrdersList = ({
@@ -15,7 +14,6 @@ export const OrdersList = ({
     detailsByOrderId,
     loadingOrderId,
     onLoadDetails,
-    onUpdateStatus,
 }: Props) => (
     <div className={styles.orders}>
         {orders.map((order) => (
@@ -25,7 +23,6 @@ export const OrdersList = ({
                 details={detailsByOrderId[order.id]}
                 isLoading={loadingOrderId === order.id}
                 onLoadDetails={onLoadDetails}
-                onUpdateStatus={onUpdateStatus}
             />
         ))}
     </div>

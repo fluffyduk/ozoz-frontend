@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { Product } from '../../../entities/product';
+import { appConfig } from '../../../shared/config/app_config';
 import type { ProductFilters } from './types';
 
-const apiBaseUrl = import.meta.env.VITE_DOMAIN;
 const productsPageSize = 21;
 
 const scrollToTop = () => {
@@ -14,11 +14,11 @@ const scrollToTop = () => {
 };
 
 const getProductsUrl = (pageNumber: number, filters: ProductFilters) => {
-    if (!apiBaseUrl) {
+    if (!appConfig.productsApiUrl) {
         throw new Error('Не задан VITE_DOMAIN в .env');
     }
 
-    const url = new URL('/api/v1/products', apiBaseUrl);
+    const url = new URL('/api/v1/products', appConfig.productsApiUrl);
 
     url.searchParams.set('SearchTerm', filters.search);
     url.searchParams.set('PageNumber', String(pageNumber));

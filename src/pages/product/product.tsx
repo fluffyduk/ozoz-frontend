@@ -5,10 +5,9 @@ import { Card } from 'primereact/card';
 
 import type { Product } from '../../entities/product';
 import { getProductCategoryLabel } from '../../entities/product';
+import { appConfig } from '../../shared/config/app_config';
 import { addProductToCart } from '../../shared/lib/cart';
 import styles from './product.module.scss';
-
-const apiBaseUrl = import.meta.env.VITE_DOMAIN;
 
 export const ProductPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -18,7 +17,7 @@ export const ProductPage = () => {
     const [cartMessage, setCartMessage] = useState<string>('');
 
     const getProductUrl = useCallback(() => {
-        if (!apiBaseUrl) {
+        if (!appConfig.productsApiUrl) {
             throw new Error('Не задан VITE_DOMAIN в .env');
         }
 
@@ -26,7 +25,7 @@ export const ProductPage = () => {
             throw new Error('Не передан идентификатор товара');
         }
 
-        return new URL(`/api/v1/products/${id}`, apiBaseUrl);
+        return new URL(`/api/v1/products/${id}`, appConfig.productsApiUrl);
     }, [id]);
 
     const loadProduct = useCallback(async () => {

@@ -7,16 +7,15 @@ import {
     removeCartItem,
     updateCartItemQuantity,
 } from '../../../shared/lib/cart';
+import { appConfig } from '../../../shared/config/app_config';
 import { getUserId } from '../../../shared/lib/user_id';
 
-const ordersApiBaseUrl = import.meta.env.VITE_ORDERS_API_URL;
-
 const getOrdersUrl = () => {
-    if (!ordersApiBaseUrl) {
+    if (!appConfig.ordersApiUrl) {
         throw new Error('Не задан VITE_ORDERS_API_URL в .env');
     }
 
-    return new URL('/api/v1/orders', ordersApiBaseUrl);
+    return new URL('/api/v1/orders', appConfig.ordersApiUrl);
 };
 
 export const useBasket = () => {

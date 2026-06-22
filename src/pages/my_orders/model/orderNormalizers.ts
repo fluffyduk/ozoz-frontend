@@ -54,8 +54,11 @@ const normalizeOrderItem = (data: unknown, index: number): OrderItem | null => {
         return null;
     }
 
+    const productId = getStringValue(data, ['productId']);
+
     return {
         id: getStringValue(data, ['id', 'productId'], String(index)),
+        productId,
         title: getStringValue(data, ['title', 'name', 'productName'], 'Товар'),
         quantity: getNumberValue(data, ['quantity', 'count']),
         price: getNumberValue(data, ['price', 'productPrice', 'totalPrice']),
@@ -72,16 +75,4 @@ export const normalizeOrderDetails = (orderId: string, data: unknown): OrderDeta
         id: orderId,
         items,
     };
-};
-
-export const getOrderStatusFromResponse = (data: unknown) => {
-    if (typeof data === 'string') {
-        return data;
-    }
-
-    if (isRecord(data)) {
-        return getStringValue(data, ['status', 'orderStatus', 'state']);
-    }
-
-    return '';
 };

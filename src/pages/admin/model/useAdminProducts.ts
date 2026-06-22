@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { Product } from '../../../entities/product';
+import { appConfig } from '../../../shared/config/app_config';
 import type { ProductDraft } from './types';
 import { getProductDraft, getProductUpdatePayload } from './types';
 
-const apiBaseUrl = import.meta.env.VITE_DOMAIN;
 const productsPageSize = 20;
 
 const getProductsUrl = (pageNumber: number, search: string) => {
-    if (!apiBaseUrl) {
+    if (!appConfig.productsApiUrl) {
         throw new Error('Не задан VITE_DOMAIN в .env');
     }
 
-    const url = new URL('/api/v1/products', apiBaseUrl);
+    const url = new URL('/api/v1/products', appConfig.productsApiUrl);
 
     url.searchParams.set('SearchTerm', search);
     url.searchParams.set('PageNumber', String(pageNumber));
@@ -23,11 +23,11 @@ const getProductsUrl = (pageNumber: number, search: string) => {
 };
 
 const getProductUrl = (productId: string) => {
-    if (!apiBaseUrl) {
+    if (!appConfig.productsApiUrl) {
         throw new Error('Не задан VITE_DOMAIN в .env');
     }
 
-    return new URL(`/api/v1/products/${productId}`, apiBaseUrl);
+    return new URL(`/api/v1/products/${productId}`, appConfig.productsApiUrl);
 };
 
 const isProduct = (value: unknown): value is Product => {

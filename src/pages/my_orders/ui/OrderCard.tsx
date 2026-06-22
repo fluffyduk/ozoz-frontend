@@ -10,7 +10,6 @@ type Props = {
     details?: OrderDetails;
     isLoading: boolean;
     onLoadDetails: (orderId: string) => void;
-    onUpdateStatus: (orderId: string) => void;
 };
 
 export const OrderCard = ({
@@ -18,7 +17,6 @@ export const OrderCard = ({
     details,
     isLoading,
     onLoadDetails,
-    onUpdateStatus,
 }: Props) => (
     <Card className={styles.card}>
         <div className={styles['order-info']}>
@@ -43,12 +41,6 @@ export const OrderCard = ({
                     outlined
                     disabled={isLoading}
                     onClick={() => onLoadDetails(order.id)}
-                />
-                <Button
-                    label="Статус"
-                    outlined
-                    disabled={isLoading}
-                    onClick={() => onUpdateStatus(order.id)}
                 />
             </div>
         </div>
