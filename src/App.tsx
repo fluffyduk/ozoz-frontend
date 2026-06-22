@@ -5,6 +5,7 @@ import { BasketPage } from "./pages/basket/basket";
 import { MyOrdersPage } from "./pages/my_orders/my_orders";
 import { useEffect } from "react";
 import { getUserId } from "./shared/lib/user_id";
+import { ProductPage } from "./pages/product/product";
 
 export const App = () => {
     useEffect(() => {
@@ -15,6 +16,7 @@ export const App = () => {
         <Routes>
             <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="/basket" element={<BasketPage />} />
                 <Route path="/my-orders" element={<MyOrdersPage />} />
             </Route>

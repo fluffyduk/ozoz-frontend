@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
+import { Link } from 'react-router-dom';
 
 import { addProductToCart } from '../../shared/lib/cart';
 
@@ -381,7 +382,9 @@ export const HomePage = () => {
                                 <span>{getCategoryLabel(product.category)}</span>
                             </div>
                             <div className={styles['product-content']}>
-                                <h3>{product.name}</h3>
+                                <Link className={styles['product-link']} to={`/products/${product.id}`}>
+                                    {product.name}
+                                </Link>
                                 <p>{product.description}</p>
                                 <span>{product.weight.toLocaleString('ru-RU')} кг</span>
                                 <div className={styles['product-footer']}>

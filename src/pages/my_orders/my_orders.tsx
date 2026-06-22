@@ -129,9 +129,9 @@ export const MyOrdersPage = () => {
 
         const url = new URL('/api/v1/orders', ordersApiBaseUrl);
 
-        url.searchParams.set('userId', userId);
-        url.searchParams.set('pageIndex', String(nextPageIndex));
-        url.searchParams.set('pageSize', String(pageSize));
+        url.searchParams.set('UserId', userId);
+        url.searchParams.set('PageIndex', String(nextPageIndex));
+        url.searchParams.set('PageSize', String(pageSize));
 
         return url;
     }, [userId]);

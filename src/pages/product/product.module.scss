@@ -1,0 +1,146 @@
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px 0;
+    background: #f6f7fb;
+    box-sizing: border-box;
+}
+
+.card {
+    overflow: hidden;
+    width: min(100%, 960px);
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
+
+    :global(.p-card-body) {
+        padding: 0;
+    }
+
+    :global(.p-card-content) {
+        padding: 0;
+    }
+}
+
+.preview {
+    display: flex;
+    align-items: flex-end;
+    min-height: 220px;
+    padding: 24px;
+    background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.88), rgba(20, 184, 166, 0.76)),
+        #2563eb;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+
+    h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 30px;
+        line-height: 1.2;
+    }
+
+    p {
+        margin: 8px 0 0;
+        color: #64748b;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    strong {
+        color: #0f172a;
+        font-size: 28px;
+        white-space: nowrap;
+    }
+}
+
+.meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+
+    div {
+        border-radius: 8px;
+        padding: 14px;
+        background: #f8fafc;
+    }
+
+    dt {
+        margin-bottom: 6px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    dd {
+        margin: 0;
+        color: #111827;
+        font-weight: 700;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.message,
+.success,
+.error {
+    width: min(100%, 960px);
+    margin: 12px 0;
+    text-align: center;
+}
+
+.message {
+    color: #64748b;
+}
+
+.success {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.error {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+@media (max-width: 760px) {
+    .page-wrapper {
+        padding: 24px 16px;
+    }
+
+    .header {
+        flex-direction: column;
+    }
+
+    .meta {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        justify-content: stretch;
+
+        :global(.p-button) {
+            width: 100%;
+        }
+    }
+}
