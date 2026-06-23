@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  ozoz-frontend:
+    image: fluffycocount/ozoz-frontend:latest
+    networks:
+      - traefik_proxy
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.ozoz-frontend.rule=Host(`ozoz.highload-study.ru`)"
+        - "traefik.http.routers.ozoz-frontend.entrypoints=websecure"
+        - "traefik.http.routers.ozoz-frontend.tls=true"
+        - "traefik.http.routers.ozoz-frontend.tls.certresolver=letresolver"
+        - "traefik.http.services.ozoz-frontend.loadbalancer.server.port=8080"
+
+networks:
+  traefik_proxy:
+    external: true
