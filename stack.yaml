@@ -14,7 +14,7 @@ services:
         - "traefik.http.routers.ozoz-frontend.entrypoints=websecure"
         - "traefik.http.routers.ozoz-frontend.tls=true"
         - "traefik.http.routers.ozoz-frontend.tls.certresolver=letresolver"
-        - "traefik.http.services.ozoz-frontend.loadbalancer.server.port=8080"
+        - "traefik.http.services.ozoz-frontend.loadbalancer.server.port=80"
 
 networks:
   traefik_proxy:
