@@ -1,11 +1,12 @@
 const userIdStorageKey = 'ozoz_user_id';
 
 const createUserId = () => {
-    if (crypto.randomUUID) {
-        return crypto.randomUUID();
-    }
+    // if (crypto.randomUUID) {
+    //     return crypto.randomUUID();
+    // }
 
-    return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    // return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    return crypto.randomUUID();
 };
 
 export const getUserId = () => {
